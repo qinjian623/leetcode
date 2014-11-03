@@ -8,6 +8,7 @@
  */
 #include <iostream>
 #include <cstdlib>
+#include <vector>
 using namespace std;
 
 struct ListNode
@@ -214,6 +215,48 @@ class LengthofLastWord {
                                 return last_len;
                 }
 };
+
+class AddBinary {
+public:
+    string addBinary(string a, string b) {
+            int max_len = max(a.length(), b.length());
+            vector<int> va = str2int_vector(a, max_len);
+            vector<int> vb = str2int_vector(b, max_len);
+            plus(va, vb);
+            return vector2str(va);
+    }
+
+    string vector2str(vector<int> v){
+            string s;
+            int start = 0;
+            if(v[0] == 0){
+                    start++;
+            }
+            for (int i = start; i< v.size(); ++i) {
+                    s.push_back(v[i]+'0');
+            }
+            return s;
+    }
+    void plus(vector<int> &a, vector<int> &b){
+            for(int i = a.size()-1; i > 0; --i){
+                    a[i] += b[i];
+            }
+            for(int i = a.size()-1; i > 0; --i){
+                    if (a[i] > 1){
+                            a[i-1] += a[i]/2;
+                            a[i] = a[i]%2;
+                    }
+            }
+    }
+    vector<int> str2int_vector(string& s, int max_len){
+            vector<int> v(max_len+1, 0);
+            for(int i = max_len,j = s.length()-1;j >= 0; --i, --j){
+                    v[i] = s[j] - '0';
+            }
+            return v;
+    }
+};
+
 
 int main(int argc, char *argv[])
 {
