@@ -1,22 +1,327 @@
-/**
- * Definition for singly-linked list.
- * struct ListNode {
- *     int val;
- *     ListNode *next;
- *     ListNode(int x) : val(x), next(NULL) {}
- * };
- */
-#include <iostream>
-#include <cstdlib>
-#include <vector>
-using namespace std;
+#include "Operation.h"
 
-struct ListNode
-{
-	int val;
-	ListNode *next;
-	ListNode(int x):val(x), next(NULL){}
+class ValidPalindrome {
+public:
+    bool isPalindrome(string s) {
+        string pure_char_str;
+        for (size_t i = 0; i < s.size(); ++i) {
+            if (std::isdigit(s[i])){
+                pure_char_str.push_back(s[i]);
+            }
+            if (std::islower(s[i])) {
+                pure_char_str.push_back(s[i]);
+            }else if(isupper(s[i])){
+                pure_char_str.push_back(tolower(s[i]));
+            }
+        }
+        string reverse(pure_char_str);
+        std::reverse(reverse.begin(), reverse.end());
+        if (reverse == pure_char_str){
+            return true;
+        }else{
+            return false;
+        }
+    }
 };
+
+class PathSum{
+public:
+    bool hasPathSum(TreeNode *root, int sum) {
+        if (root == NULL){
+            return false;
+        }
+        int cur_sum = sum-(root->val);
+        if (cur_sum == 0 && root->right == NULL && root->left == NULL){
+            return true;
+        }
+        
+        if(hasPathSum(root->left, cur_sum)){
+            return true;
+        }
+        if (hasPathSum(root->right, cur_sum)){
+            return true;
+        }
+        return false;
+    }
+};
+
+class MinimumDepthofBinaryTree {
+public:
+    int minDepth(TreeNode *root) {
+        if (root == NULL){
+            return 0;
+        }
+        if (root->left == NULL && root->right== NULL) {
+            return 1;
+        }
+        int min_left_depth = 1 + minDepth(root->left);
+        int min_right_depth = 1 + minDepth(root->right);
+        if (root->left == NULL){
+            return min_right_depth;
+        }
+        if (root->right == NULL){
+            return min_left_depth;
+        }
+        return min(min_left_depth, min_right_depth);
+    }
+};
+
+class MaximumDepthofBinaryTree {
+public:
+    int maxDepth(TreeNode *root) {
+        if(root == NULL){
+            return 0;
+        }
+        if (root->left == NULL && root->right== NULL) {
+            return 1;
+        }
+        int max_left_depth = 1 + maxDepth(root->left);
+        int max_right_depth = 1 + maxDepth(root->right);
+        if (root->left == NULL){
+            return max_right_depth;
+        }
+        if (root->right == NULL){
+            return max_left_depth;
+        }
+        return max(max_left_depth, max_right_depth);
+    }
+};
+
+class SymmetricTree {
+public:
+    bool isSymmetric(TreeNode *root) {
+        if (root == NULL) {
+            return true;
+        }
+        return isMirrorTree(root->left, root->right);
+    }
+    
+    bool isMirrorTree(TreeNode *p, TreeNode *q) {
+        if (p == NULL && q == NULL) {
+            return true;
+        }
+        if ((p == NULL && q != NULL )||(p!= NULL && q == NULL)) {
+            return false;
+        }
+        if (p->val != q->val){
+            return false;
+        }
+        return (isMirrorTree(p->right, q->left)&& isMirrorTree(p->left, q->right));
+    }
+};
+
+class PlusOne {
+public:
+    vector<int> plusOne(vector<int> &digits) {
+        digits.insert(digits.begin(), 0);
+        size_t end = digits.size() - 1;
+        int extra = 0;
+        digits[end] += 1;
+
+        for (long long i = end; i > -1; --i) {
+            digits[i] += extra;
+            if (digits[i] > 9) {
+                extra = digits[i]/10;
+                digits[i] = digits[i]%10;
+            }else{
+                extra = 0;
+            }
+        }
+        if (digits[0] == 0) {
+            digits.erase(digits.begin());
+        }
+        return digits;
+    }
+};
+
+class RemoveElement {
+public:
+    int removeElement(int A[], int n, int elem) {
+        int c = 0;
+        for (int i = 0, j = 0; i < n; ++i) {
+            if (A[i] == elem) {
+                c++;
+                continue;
+            }else{
+                A[j] = A[i];
+                j++;
+            }
+        }
+        return n - c;
+    }
+};
+
+
+class ValidParentheses{
+public:
+    bool isValid(string s) {
+        stack<char> sys;
+        for (int i = 0; i < s.size(); ++i) {
+            switch (s[i]) {
+                case '(':
+                    sys.push(')');
+                    break;
+                case '[':
+                    sys.push(']');
+                    break;
+                case '{':
+                    sys.push('}');
+                    break;
+                default:
+                    if (sys.empty()) {
+                        return false;
+                    }
+                    if (sys.top() != s[i]) {
+                        return false;
+                    }
+                    sys.pop();
+                    break;
+            }
+        }
+        if (!sys.empty()){
+            return false;
+        }
+        return true;
+    }
+};
+
+class RemoveDuplicatesfromSortedArray {
+public:
+    int removeDuplicates(int A[], int n) {
+        int c = 0;
+        for (int i = 0, j = 0; i < n; ++i) {
+            if (A[i] == A[j - 1]) {
+                c++;
+                continue;
+            }else{
+                A[j] = A[i];
+                j++;
+            }
+        }
+        return n - c;
+    }
+};
+
+class RemoveNthNodeFromEndofList {
+public:
+    ListNode *removeNthFromEnd(ListNode *head, int n) {
+        ListNode *p;
+        ListNode *tail = head;
+        for (int i = 0; i < n; ++i) {
+            tail = tail->next;
+        }
+        p = head;
+        while (tail->next->next != NULL) {
+            p = p->next;
+            tail = tail->next;
+        }
+        p->next = p->next->next;
+        return head;
+    }
+};
+
+class PascalsTriangle {
+public:
+    vector<vector<int> > generate(int numRows) {
+        vector<vector<int> > ret;
+        for (int i =0; i < numRows; ++i) {
+            vector<int> line(i+1);
+            line[0] = 1;
+            line[i] = 1;
+            for (int j = 1; j < i; ++j) {
+                line[j] = ret[i-1][j-1]+ret[i-1][j];
+            }
+            ret.push_back(line);
+        }
+        return ret;
+    }
+};
+
+class PascalsTriangleII {
+public:
+    vector<int> getRow(int rowIndex) {
+        rowIndex++;
+        vector<vector<int>> rows;
+        rows.push_back(vector<int>(rowIndex));
+        rows.push_back(vector<int>(rowIndex));
+        int current = 1;
+        int previous = 0;
+        for (int i =0; i < rowIndex; ++i) {
+            vector<int> pre = rows[previous];
+            rows[current][0] = 1;
+            rows[current][i] = 1;
+            for (int j = 1; j < i; ++j) {
+                rows[current][j] = rows[previous][j-1]+rows[previous][j];
+            }
+            std::swap(current, previous);
+        }
+        return rows[previous];
+    }
+};
+
+class BalancedBinaryTree {
+public:
+    bool isBalanced(TreeNode *root) {
+        return balanced_power(root) > 0;
+    }
+    
+    int balanced_power(TreeNode * root){
+        if (root == NULL) {
+            return 0;
+        }
+        int left_bp = balanced_power(root->left);
+        int right_bp = balanced_power(root->right);
+        if (left_bp < 0 || right_bp < 0 || abs(left_bp - right_bp) > 1) {
+            return -1;
+        }else{
+            return max(left_bp, right_bp)+1;
+        }
+    }
+};
+
+class BinaryTreeLevelOrderTraversalII {
+public:
+    vector<vector<int> > levelOrderBottom(TreeNode *root) {
+        vector<vector<int>> ret;
+        depth_traking(root, ret, 1);
+        reverse(ret.begin(), ret.end());
+        return ret;
+    }
+    
+    void depth_traking(TreeNode *root, vector<vector<int>> & recycle, int cur_depth){
+        if (root == NULL) {
+            return;
+        }
+        if (recycle.size() < cur_depth) {
+            recycle.push_back(vector<int>());
+        }
+        recycle[cur_depth - 1].push_back(root->val);
+        depth_traking(root->left, recycle, cur_depth+1);
+        depth_traking(root->right, recycle, cur_depth+1);
+    }
+};
+
+class LongestCommonPrefix {
+public:
+    string longestCommonPrefix(vector<string> &strs) {
+        string ret;
+        if (strs.size() == 0) {
+            return "";   // Or maybe return null?
+        }
+        
+        for (int prefixLen = 0; prefixLen < strs[0].length(); prefixLen++) {
+            char c = strs[0][prefixLen];
+            for (int i = 1; i < strs.size(); i++) {
+                if ( prefixLen >= strs[i].length() ||
+                    strs[i][prefixLen] != c ) {
+                    return ret;                }
+            }
+            ret.push_back(strs[0][prefixLen]);
+        }
+        return ret;
+    }
+};
+
 
 class RemoveDuplicatesfromSortedList {
 public:
