@@ -7,6 +7,7 @@
  * };
  */
 #include <iostream>
+#include <cstdlib>
 using namespace std;
 
 struct ListNode
@@ -184,14 +185,49 @@ public:
 	}
 };
 
-
-
-
+class LengthofLastWord {
+        public:
+                int lengthOfLastWord(const char *s) {
+                        bool in_space_region = true;
+                        int i, len = 0;
+                        int last_len = 0;
+                        for (i = 0; s[i] != 0; ++i) {
+                                if (s[i] == ' ' && !in_space_region) {
+                                        last_len = len;
+                                        len = 0;
+                                        in_space_region = true;
+                                }
+                                if (s[i] != ' ' && in_space_region) {
+                                        len = 0;
+                                        in_space_region = false;
+                                }
+                                if (s[i] != ' ' && !in_space_region) {
+                                        len++;
+                                }
+                        }
+                        if(i == 0){
+                                return 0;
+                        }
+                        if (s[i - 1] != ' ')
+                                return len;
+                        else
+                                return last_len;
+                }
+};
 
 int main(int argc, char *argv[])
 {
-	ValidNumber vn;
-	std::cout << vn.isNumber(" e");
+	LengthofLastWord vn;
+std::cout << vn.lengthOfLastWord("b a ")<< endl;
+std::cout << vn.lengthOfLastWord("aasdfasdf wo")<< endl;
+std::cout << vn.lengthOfLastWord("aasdfasdf wo ")<< endl;
+std::cout << vn.lengthOfLastWord("hello world")<< endl;
+std::cout << vn.lengthOfLastWord(" ")<< endl;
+
+std::cout << vn.lengthOfLastWord("a ")<< endl;
+std::cout << vn.lengthOfLastWord("a")<< endl;
+std::cout << vn.lengthOfLastWord("")<< endl;
+
 	return 0;
 }
 
